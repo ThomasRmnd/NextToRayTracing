@@ -5,22 +5,22 @@ Object::Object() :
     m_u(1.0f, 0.0f, 0.0f),
     m_v(0.0f, 1.0f, 0.0f),
     m_w(0.0f, 0.0f, 1.0f)
-{};
+{}
 
 Object::Object(const Vec3& pos) :
     m_pos(pos),
     m_u(1.0f, 0.0f, 0.0f),
     m_v(0.0f, 1.0f, 0.0f),
     m_w(0.0f, 0.0f, 1.0f)
-{};
+{}
 
 HittableObject::HittableObject() :
     Object()
-{};
+{}
 
 HittableObject::HittableObject(const Vec3& pos) :
     Object(pos)
-{};
+{}
 
 HittableObject::HittableObject(const Vec3& pos, const Vec3& w) :
     Object(pos)
@@ -32,16 +32,16 @@ HittableObject::HittableObject(const Vec3& pos, const Vec3& w) :
         m_u = -m_u;
         m_v = -m_v;
     }
-};
+}
 
 void HittableObject::addProperty(Property* prop) {
     m_props.push_back(prop);
-};
+}
 
 CircularObject::CircularObject(float radius) :
     m_radius(radius)
-{};
+{}
 
 float CircularObject::getRadius() const {
     return m_radius;
-};
+}

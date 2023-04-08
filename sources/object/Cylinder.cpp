@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "object/Cylinder.hpp"
 #include "ray/Hit.hpp"
 
@@ -34,7 +36,7 @@ Cylinder::Cylinder(const Vec3& pos, const Vec3& w, float radius, float height) :
     HittableObject(pos, w),
     m_height(height)
 {
-    m_disk_top = new Disk(m_pos + m_w * (-m_height/2.f), m_w, radius);
+    m_disk_top = new Disk(m_pos + m_w * (m_height/2.f), m_w, radius);
     m_disk_bottom = new Disk(m_pos - m_w * (m_height/2.f), m_w, radius);
     m_cylinder = new InfiniteCylinder(m_pos, m_w, radius);
 }
@@ -48,7 +50,7 @@ Cylinder::~Cylinder() {
 Hit Cylinder::intersect(const Ray& ray) const {
     Hit hit = m_cylinder->intersect(ray);
     if (hit.getObj() != nullptr) {
-        if (-m_height / 2.f <= hit.getPos() * m_w && hit.getPos() * m_w <= m_height / 2.f) {
+        if (std::abs((hit.getPos() - m_pos) * m_w ) <= m_height / 2.f) {
             return hit;
         }
     }

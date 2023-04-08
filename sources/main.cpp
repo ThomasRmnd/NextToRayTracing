@@ -44,17 +44,23 @@ sf::Image lancer0(const std::vector<HittableObject*> objects, Camera* cam) {
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
-    Camera cam_sd(Vec3(0.f, 0.f, 5.f), Vec3(0.f, 0.f, -1.f), 300, 200, 6.f, 4.f, 5.f);
-    // Sphere sphere_1(Vec3(2.f, 0.f, -5.f), 2.f);
-    Cylinder cylinder_1(Vec3(3.f, 0.f, -10.f), Vec3(0.f, 0.f, 1.f), 2.f, 2.f);
+    Camera cam_sd(Vec3(0.f, 0.f, 5.f), Vec3(0.f, 0.f, -1.f), 600, 400, 10.f, 7.5f, 5.f);
+    Sphere sphere_1(Vec3(2.f, 0.f, -5.f), 2.f);
+    Cylinder cylinder_1(Vec3(0.f, 0.f, -10.f), Vec3(1.f, 3.f, 1.f), 2.f, 5.f);
+    InfiniteCylinder infinite_cylinder_1(Vec3(0.f, 0.f, -10.f), Vec3(1.f, 1.f, 1.f), 2.f);
+    Cube cube_1(Vec3(0.f, 0.f, -5.f), Vec3(1.f, 1.f, 1.f), 2.f);
     Plan plan_1(Vec3(0.f, -2.f, 0.f), Vec3(0.f, 1.f, 0.f));
-    std::vector<HittableObject*> objects = {&cylinder_1, &plan_1};
+    std::vector<HittableObject*> objects = {&cube_1};
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
     window.setFramerateLimit(30);
     sf::Image t;
     sf::Texture texture;
     sf::Sprite sprite;
+    t = lancer0(objects, &cam_sd);
+    texture.loadFromImage(t);
+    sprite.setTexture(texture);
+    sprite.setScale(800.f / cam_sd.getResX(), 600.f / cam_sd.getResY());
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -62,10 +68,6 @@ int main() {
                 window.close();
         }
         window.clear();
-        t = lancer0(objects, &cam_sd);
-        texture.loadFromImage(t);
-        sprite.setTexture(texture);
-        sprite.setScale(800.f / cam_sd.getResX(), 600.f / cam_sd.getResY());
         window.clear();
         window.draw(sprite);
         window.display();
