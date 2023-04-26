@@ -27,6 +27,16 @@ Ray Camera::getRay(unsigned int i, unsigned int j) const {
     return Ray(m_pos, point - m_pos);
 }
 
+Ray Camera::getRay(float i, float j) const {
+    float x_ratio = i / (float)m_res_x;
+    float y_ratio = j / (float)m_res_y;
+    float x = -m_x_width/2.f + x_ratio * m_x_width;
+    float y = -m_y_width/2.f + y_ratio * m_y_width;
+    float z = -m_zoom;
+    Vec3 point = m_pos + x * m_u + y * m_v + z * m_w;
+    return Ray(m_pos, point - m_pos);
+}
+
 unsigned int Camera::getResX() const {
     return m_res_x;
 }

@@ -10,6 +10,7 @@ public:
     InfiniteCylinder(const Vec3& pos, const Vec3& w, float radius);
 
     Hit intersect(const Ray& ray) const override;
+    Vec3 getNormal(const Vec3& pos) const override;
 
 };
 
@@ -29,5 +30,6 @@ public:
     ~Cylinder();
 
     Hit intersect(const Ray& ray) const override;
+    Vec3 getNormal(const Vec3& pos) const override;
 
 };

@@ -11,6 +11,7 @@ public:
     Plan(const Vec3& pos, const Vec3& w);
 
     Hit intersect(const Ray& ray) const override;
+    Vec3 getNormal(const Vec3& pos) const override;
 
 };
 
@@ -33,23 +34,6 @@ private:
 public:
 
     Square(const Vec3& pos, const Vec3& u, const Vec3& v, const Vec3& w, float side);
-
-    Hit intersect(const Ray& ray) const override;
-
-};
-
-class Cube : public HittableObject {
-
-private:
-
-    float m_side;
-    std::array<Square*, 6> m_squares;
-
-public:
-
-    Cube(const Vec3& pos, const Vec3& w, float side);
-
-    ~Cube();
 
     Hit intersect(const Ray& ray) const override;
 

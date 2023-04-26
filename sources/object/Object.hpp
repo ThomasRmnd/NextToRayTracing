@@ -41,6 +41,7 @@ public:
 
     void addProperty(Property* prop);
     virtual Hit intersect(const Ray& ray) const = 0;
+    virtual Vec3 getNormal(const Vec3& pos) const = 0;
 
 };
 

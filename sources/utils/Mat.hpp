@@ -33,24 +33,34 @@ public:
 
     Mat<NRows, NCols>& operator=(const Mat<NRows, NCols>& other) = default;
     Mat<NRows, NCols>& operator+=(const Mat<NRows, NCols>& other) {
-        std::transform(m_mat.begin(), m_mat.end(), other.m_mat.begin(), m_mat.begin(), std::plus<Vec<NCols>>());
+        for (std::size_t i = 0; i < NRows; i++) {
+            m_mat[i] += other.m_mat[i];
+        }
         return *this;
     };
     Mat<NRows, NCols>& operator-=(const Mat<NRows, NCols>& other) {
-        std::transform(m_mat.begin(), m_mat.end(), other.m_mat.begin(), m_mat.begin(), std::minus<Vec<NCols>>());
+        for (std::size_t i = 0; i < NRows; i++) {
+            m_mat[i] -= other.m_mat[i];
+        }
         return *this;
     };
     Mat<NRows, NCols>& operator*=(float value) {
-        std::for_each(m_mat.begin(), m_mat.end(), std::bind(std::multiplies<Vec<NCols>>(), std::placeholders::_1, value));
+        for (std::size_t i = 0; i < NRows; i++) {
+            m_mat[i] *= value;
+        }
         return *this;
     };
     Mat<NRows, NCols>& operator/=(float value) {
-        std::for_each(m_mat.begin(), m_mat.end(), std::bind(std::divides<Vec<NCols>>(), std::placeholders::_1, value));
+        for (std::size_t i = 0; i < NRows; i++) {
+            m_mat[i] /= value;
+        }
         return *this;
     };
     Mat<NRows, NCols>& operator-() const {
         Mat<NRows, NCols> result;
-        std::transform(m_mat.begin(), m_mat.end(), result.m_mat.begin(), std::negate<Vec<NCols>>());
+        for (std::size_t i = 0; i < NRows; i++) {
+            result[i] = -m_mat[i];
+        }
         return result;
     };
     const Vec<NCols>& operator[](std::size_t index) const {

@@ -8,6 +8,7 @@
 #include <cmath>
 #include <initializer_list>
 
+#include "random/RandomGenerator.h"
 #include "utils/Mat.hpp"
 
 template<std::size_t NRows, std::size_t NCols> class Mat;
@@ -48,24 +49,29 @@ public:
         return *this;
     };
     Vec<N>& operator+=(const Vec<N>& other) {
-        std::transform(m_vec.begin(), m_vec.end(), other.m_vec.begin(), m_vec.begin(), std::plus<float>());
+        for (std::size_t i = 0; i < N; ++i)
+            m_vec[i] += other.m_vec[i];
         return *this;
     };
     Vec<N>& operator-=(const Vec<N>& other) {
-        std::transform(m_vec.begin(), m_vec.end(), other.m_vec.begin(), m_vec.begin(), std::minus<float>());
+        for (std::size_t i = 0; i < N; ++i)
+            m_vec[i] -= other.m_vec[i];
         return *this;
     };
     Vec<N>& operator*=(float value) {
-        std::for_each(m_vec.begin(), m_vec.end(), [&value](float& x) { x *= value; });
+        for (std::size_t i = 0; i < N; ++i)
+            m_vec[i] *= value;
         return *this;
     };
     Vec<N>& operator/=(float value) {
-        std::for_each(m_vec.begin(), m_vec.end(), [&value](float& x) { x /= value; });
+        for (std::size_t i = 0; i < N; ++i)
+            m_vec[i] /= value;
         return *this;
     };
     Vec<N> operator-() const {
         Vec<N> result;
-        std::transform(m_vec.begin(), m_vec.end(), result.m_vec.begin(), std::negate<float>());
+        for (std::size_t i = 0; i < N; ++i)
+            result.m_vec[i] = -m_vec[i];
         return result;
     };
     float operator[](std::size_t index) const {
@@ -135,6 +141,38 @@ public:
         return N;
     };
 
+    // Static methods
+
+    static Vec<N> zeros() {
+        return Vec<N>(0.f);
+    };
+    static Vec<N> random() {
+        UniformGenerator generator;
+        return Vec<N>(generator.generate(), generator.generate(), generator.generate());
+    }
+    static Vec<N> random(float min, float max) {
+        UniformGenerator generator;
+        return Vec<N>(generator.generate(min, max), generator.generate(min, max), generator.generate(min, max));
+    }
+    static Vec<N> set_norm_theta_phi(float norm, float theta, float phi) {
+        if (N != 3)
+            throw std::out_of_range("Vec::set_norm_theta_phi() : N != 3");
+        return Vec(norm * std::sin(theta) * std::cos(phi), norm * std::sin(theta) * std::sin(phi), norm * std::cos(theta));
+    } 
+    static Vec<N> random_unit_ball() {
+        UniformGenerator generator;
+        float norm = generator.generate(0.f, 1.f);
+        float theta = generator.generate(0.f, M_PI);
+        float phi = generator.generate(0.f, 2 * M_PI);
+        return set_norm_theta_phi(norm, theta, phi);
+    }
+    static Vec<N> random_unit_sphere() {
+        UniformGenerator generator;
+        float theta = generator.generate(0.f, M_PI);
+        float phi = generator.generate(0.f, 2 * M_PI);
+        return set_norm_theta_phi(1.f, theta, phi);
+    }
+
     // Friend functions
 
     friend Vec<N> operator+(const Vec<N>& left, const Vec<N>& right) {
@@ -150,7 +188,10 @@ public:
         return Vec<N>(right) *= value;
     }
     friend float operator*(const Vec<N>& left, const Vec<N>& right) {
-        return std::inner_product(left.m_vec.begin(), left.m_vec.end(), right.m_vec.begin(), 0.f);
+        float result = 0.f;
+        for (std::size_t i = 0; i < N; i++)
+            result += left.m_vec[i] * right.m_vec[i];
+        return result;
     }
     template<std::size_t ON>
     friend Vec<ON> operator*(const Vec<N>& left, const Mat<N, ON>& right) {
